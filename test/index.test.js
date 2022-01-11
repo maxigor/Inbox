@@ -4,7 +4,7 @@ const ganache = require('ganache-cli') //local ethereum network
 const Web3 = require('web3');
 const web3 = new Web3(ganache.provider());
 var expect = chai.expect;
-const { interface , bytecode } = require('../compile.js');
+const { abi , evm } = require('../compile.js');
 
 
 let accounts;
@@ -14,13 +14,13 @@ beforeEach(async() => {
 	accounts = await web3.eth.getAccounts();
 
 	// contrato
-	inbox =  await new web3.eth.Contract(JSON.parse(interface))
+	inbox =  await new web3.eth.Contract(JSON.parse(abi))
 		.deploy({
-			data: bytecode, 
+			data: evm.bytecode.object, 
 			arguments: ["Hiiiiiiii Thereeeee!!!!!"] })
 		.send({
 			from: accounts[0], 
-			gas: 1000000 });
+			gas: 1000000 9 });
 });
 
 
@@ -33,7 +33,7 @@ describe('Inbox', () => {
 
 	it('has a default message', async () => {
 		const message = await inbox.methods.message().call();
-		expect(message).to.be.a("string");
+		expect(message).to.be.a("string"); //chai
 	});
 
 	it('can change the message', async () => {
@@ -50,40 +50,3 @@ describe('Inbox', () => {
 });
 
 
-
-
-
-
-
-
-
-
-
-/*
-
-class Car {
-	constructor(park, drive) {
-		this.park = "0 km...";
-		this.drive = "20 km..."
-	}
-
-}
-
-
-let ford;
-beforeEach(() => {
-	ford = new Car();  //cria novo carro
-});
-
-
-describe('Car', () => {
-	it('Deveria estar parado', () => {
-		expect(ford.park).to.be.equal('330 km...');
-	})
-
-	it('Deveria ser uma string', () => {
-		expect(ford.drive).to.be.a("string");
-	})
-})
-
-*/

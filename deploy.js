@@ -1,6 +1,6 @@
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 const Web3 = require("web3");
-const { interface , bytecode } = require('./compile.js');
+const { abi , evm } = require('./compile.js');
 
 
 const provider = new HDWalletProvider(
@@ -15,9 +15,9 @@ const deploy = async () => {
 
 	console.log('Tentando dar deploy da conta: ', accounts[0]);
 
-	const result = await new web3.eth.Contract(JSON.parse(interface))
+	const result = await new web3.eth.Contract(JSON.parse(abi))
 		.deploy({
-			data: bytecode,
+			data: evm.bytecode.object,
 			arguments: ['Hello World! =)']
 		})
 		.send({
